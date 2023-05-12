@@ -1,4 +1,8 @@
 word = 'hello'
 
-print(word[:4])
+# word.remove(word[:1])
+
+# print(word[-4:])
+
+print(word[:-1])
 
