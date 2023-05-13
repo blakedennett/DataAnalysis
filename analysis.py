@@ -32,8 +32,8 @@ def combine(dat1, dat2):
     return pd.concat(to_combine)
 
 
-def get_company_name(row):
-    msft = yf.Ticker(row['company_id'])
+def get_company_name(id):
+    msft = yf.Ticker(id)
 
     company_name = msft.info['longName']
     return company_name
