@@ -2,6 +2,8 @@ import pandas as pd
 import os
 import threading
 import time
+import numpy as np
+import yfinance as yf
 
 start_time = time.time()
 
@@ -24,11 +26,17 @@ df4 = pd.DataFrame()
 dataframes = []
 
 
-
 # function to combine two datasets
 def combine(dat1, dat2):
     to_combine = [dat1, dat2]
     return pd.concat(to_combine)
+
+
+def get_company_name(row):
+    msft = yf.Ticker(row['company_id'])
+
+    company_name = msft.info['longName']
+    return company_name
 
 
 # function to loop through and open files
@@ -40,10 +48,11 @@ def files_to_dataframe(directory_path, with_slash, df):
         path = directory + filename
         with open(path, 'r') as file:
             dat = pd.read_csv(file)
-        dat['company'] = filename[:len(filename)-4]
+        dat['company_id'] = filename[:len(filename)-4]
         df = combine(df, dat)
     dataframes.append(df)
 
+# loops through the folder broken up into four threads that run concurently 
 thread1 = threading.Thread(target=files_to_dataframe, args=(a_i_directory_path, with_slash, df))
 thread2 = threading.Thread(target=files_to_dataframe, args=(j_p_directory_path, with_slash2, df2))
 thread3 = threading.Thread(target=files_to_dataframe, args=(q_z_directory_path, with_slash3, df3))
@@ -59,15 +68,41 @@ thread3.join()
 thread4.join()
 
 
+
+# combining the dataframes from each of the four threads
 df = combine(dataframes[0], dataframes[1])
 df2 = combine(dataframes[2], dataframes[3])
 df = combine(df, df2)
 print(df.head())
 print(len(df))
 
+# df['company'] = df.apply(get_company_name, axis=1)
+# df.drop(columns=['company_id'])
 
-# files_to_dataframe(a_i_directory_path, with_slash, df)
-# files_to_dataframe(j_z_directory_path, with_slash2, df2)
+print(f"--- %s seconds ---" % (time.time() - start_time))
+
+
+
+# ====================================================DATA ANALYSIS =========================================
+
+
+# what is the biggest difference in the low and high?
+
+df['difference'] = df.apply(lambda x: x.High - x.Low, axis=1)
+
+print(df.head())
+max = df["difference"].max()
+df.set_index("difference", inplace=True)
+# max_id = df.loc[max,'company_id']
+# print(max)
+
+# max_df = df.query(f'difference == {max}')
+# max_company = max_df['company_id']
+high = df.loc[max,'High']
+low = df.loc[max,'Low']
+company = get_company_name(df.loc[max,'company_id'])
+
+print(f"The biggest difference in high to low is {max} from {company}")
+print(f'The high was {high} and the low was {low}')
+
 print("--- %s seconds ---" % (time.time() - start_time))
-
-# ============================================= add a column with the company id on it ======================
