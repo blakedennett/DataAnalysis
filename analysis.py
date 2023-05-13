@@ -5,7 +5,8 @@ import time
 import numpy as np
 import yfinance as yf
 
-start_time = round(time.time(), 2)
+
+start_time = time.time()
 
 a_i_directory_path = r"C:\Users\Blake Dennett\Downloads\Spring2023\appliedProgramming\Data\stock_market_data\sp500\csv"
 with_slash = r"C:\Users\Blake Dennett\Downloads\Spring2023\appliedProgramming\Data\stock_market_data\sp500\csv\'"
@@ -78,7 +79,7 @@ print(len(df))
 # df['company'] = df.apply(get_company_name, axis=1)
 # df.drop(columns=['company_id'])
 
-upload_time = round(time.time(), 2)
+upload_time = time.time()
 print(f"--- %s seconds ---" % (upload_time - start_time))
 
 
@@ -99,10 +100,10 @@ company = get_company_name(df.loc[max,'company_id'])
 date = df.loc[max, 'Date']
 
 print(f"The biggest difference in high to low is {max} from {company}")
-print(f'The high was {high} and the low was {low}')
+print(f'The high was {high:.2f} and the low was {low:.2f}')
 print(f'The date was {date}')
 
-difference_time = round(time.time(), 2)
+difference_time = time.time()
 print("--- %s seconds ---" % (difference_time - upload_time))
 df.reset_index(inplace=True)
 
@@ -111,7 +112,7 @@ df.reset_index(inplace=True)
 
 df['percent_difference'] = df.apply(lambda x: (x.difference / x.High) * 100, axis=1)
 max = df['percent_difference'].max()
-print(df.head())
+
 df.set_index("percent_difference", inplace=True)
 company = df.loc[max, 'company_id']
 high = df.loc[max, 'High']
@@ -119,10 +120,11 @@ low = df.loc[max, 'Low']
 date = df.loc[max, 'Date']
 
 print(f"The biggest difference by percent from high to low is {max} from {get_company_name(company)}")
-print(f'The high was {high} and the low was {low}')
+print(f'The high was {high:.2f} and the low was {low:.4f}')
 print(f'The date was {date}')
 
 df.reset_index(inplace=True)
+print(df.head())
 
 percentage_time = time.time()
 print("--- %s seconds ---" % (percentage_time - difference_time))
