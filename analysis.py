@@ -5,7 +5,7 @@ import time
 import numpy as np
 import yfinance as yf
 
-start_time = time.time()
+start_time = round(time.time(), 2)
 
 a_i_directory_path = r"C:\Users\Blake Dennett\Downloads\Spring2023\appliedProgramming\Data\stock_market_data\sp500\csv"
 with_slash = r"C:\Users\Blake Dennett\Downloads\Spring2023\appliedProgramming\Data\stock_market_data\sp500\csv\'"
@@ -73,36 +73,56 @@ thread4.join()
 df = combine(dataframes[0], dataframes[1])
 df2 = combine(dataframes[2], dataframes[3])
 df = combine(df, df2)
-print(df.head())
 print(len(df))
 
 # df['company'] = df.apply(get_company_name, axis=1)
 # df.drop(columns=['company_id'])
 
-print(f"--- %s seconds ---" % (time.time() - start_time))
+upload_time = round(time.time(), 2)
+print(f"--- %s seconds ---" % (upload_time - start_time))
 
 
 
-# ====================================================DATA ANALYSIS =========================================
+# ==================================================== DATA ANALYSIS =========================================
 
 
 # what is the biggest difference in the low and high?
 
 df['difference'] = df.apply(lambda x: x.High - x.Low, axis=1)
 
-print(df.head())
 max = df["difference"].max()
 df.set_index("difference", inplace=True)
-# max_id = df.loc[max,'company_id']
-# print(max)
 
-# max_df = df.query(f'difference == {max}')
-# max_company = max_df['company_id']
 high = df.loc[max,'High']
 low = df.loc[max,'Low']
 company = get_company_name(df.loc[max,'company_id'])
+date = df.loc[max, 'Date']
 
 print(f"The biggest difference in high to low is {max} from {company}")
 print(f'The high was {high} and the low was {low}')
+print(f'The date was {date}')
 
-print("--- %s seconds ---" % (time.time() - start_time))
+difference_time = round(time.time(), 2)
+print("--- %s seconds ---" % (difference_time - upload_time))
+df.reset_index(inplace=True)
+
+
+# What is the largest difference by percentage?
+
+df['percent_difference'] = df.apply(lambda x: (x.difference / x.High) * 100, axis=1)
+max = df['percent_difference'].max()
+print(df.head())
+df.set_index("percent_difference", inplace=True)
+company = df.loc[max, 'company_id']
+high = df.loc[max, 'High']
+low = df.loc[max, 'Low']
+date = df.loc[max, 'Date']
+
+print(f"The biggest difference by percent from high to low is {max} from {get_company_name(company)}")
+print(f'The high was {high} and the low was {low}')
+print(f'The date was {date}')
+
+df.reset_index(inplace=True)
+
+percentage_time = time.time()
+print("--- %s seconds ---" % (percentage_time - difference_time))
