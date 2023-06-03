@@ -9,8 +9,6 @@ https://www.kaggle.com/datasets/paultimothymooney/stock-market-data?resource=dow
 I definitely learned from this experience. First off, I got some more exposure to using threads and looping through files
 in a folder. I also learned more about isolating specific rows and learned about more packages like Swifter to run the apply function in parallel. Lastly, I was able to at least make a vanilla machine learning model to get try to guess the close of each row.
 
-[Software Demo Video](https://youtu.be/MuPGSyKM0VE)
-
 # Data Analysis Results
 
 ### What is the biggest difference in the low and high?
@@ -25,6 +23,10 @@ The biggest difference by percent from high to low is 99.98492462247178 from For
 The high was 1.99 and the low was 0.0003
 The date was 23-11-2020
 
+### Netflix Share Price Graph
+
+![Netflix Graph Image](ntflx_viz.PNG)
+
 # Development Environment
 
 I will be simply using Visual Studio Code as my text editor for this project. I'll save it on Github and I'll be using Python, Pandas, Altair, numpy, and Sklearn.  
@@ -35,6 +37,6 @@ https://github.com/blakedennett/DataAnalysis
 
 # Future Work
 
-Add some visualizations
+Add some more visualizations
 
 Improve my machine learning model
